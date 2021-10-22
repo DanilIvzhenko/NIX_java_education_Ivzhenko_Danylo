@@ -23,13 +23,16 @@ public class Main
         System.out.println("Coffee is ready!"); */
 
         printResources();
-        System.out.println(" ");
-        System.out.println("Write action: (buy, fill, take)");
-        String input = scanner.nextLine();
-        switch (input) {
-            case ("buy") -> buy();
-            case ("fill") -> fill();
-            case ("take") -> take();
+        while (true) {
+            System.out.println("\nWrite action: (buy, fill, take, remaining, exit)");
+            String input = scanner.nextLine();
+            switch (input) {
+                case ("buy") -> buy();
+                case ("fill") -> fill();
+                case ("take") -> take();
+                case ("remaining") -> remaining();
+                case ("exit") -> exit();
+            }
         }
     }
 
@@ -45,7 +48,7 @@ public class Main
 
     static void buy () {
         System.out.println("What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino: ");
-        if(CoffeeMachine.buy(scanner.nextInt())){
+        if(CoffeeMachine.buy(Integer.parseInt(scanner.nextLine()))){
             System.out.println("Making you a coffee");
         }else{
             System.out.println("I don`t have enough resources");
@@ -55,13 +58,13 @@ public class Main
 
     static void fill () {
         System.out.print("Write how many ml of water do you want to add: ");
-        water += scanner.nextInt();
+        water += Integer.parseInt(scanner.nextLine());
         System.out.print("Write how many ml of milk do you want to add: ");
-        milk += scanner.nextInt();
+        milk += Integer.parseInt(scanner.nextLine());
         System.out.print("Write how many grams of coffee beans do you want to add: ");
-        coffeeBeans += scanner.nextInt();
+        coffeeBeans += Integer.parseInt(scanner.nextLine());
         System.out.print("Write how many disposable cups of coffee do you want to add: ");
-        cups += scanner.nextInt();
+        cups += Integer.parseInt(scanner.nextLine());
         printResources();
     }
 
@@ -69,5 +72,13 @@ public class Main
         System.out.println("I gave you " + money);
         money = 0;
         printResources();
+    }
+
+    static void remaining() {
+        printResources();
+    }
+
+    static void exit() {
+        System.exit(0);
     }
 }

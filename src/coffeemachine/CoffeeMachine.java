@@ -37,44 +37,43 @@ public class CoffeeMachine {
 
     static Boolean buy(int coffeeType) {
         boolean canMakeTheCoffee;
+            switch (coffeeType) {
+                case 1 -> {
+                    if(Main.water < 250 && Main.coffeeBeans < 16 && Main.cups < 1){
+                        canMakeTheCoffee = false;
+                    }else{
+                        Main.water -= 250;
+                        Main.coffeeBeans -= 16;
+                        Main.cups -= 1;
+                        Main.money += 4;
+                        canMakeTheCoffee = true;
+                    }
+                }
 
-        switch (coffeeType) {
-            case 1 -> {
-                if(Main.water < 250 && Main.coffeeBeans < 16 && Main.cups < 1){
-                    canMakeTheCoffee = false;
-                }else{
-                    Main.water -= 250;
-                    Main.coffeeBeans -= 16;
+                case 2 -> {
+                    if(Main.water < 350 && Main.milk < 75 && Main.coffeeBeans < 20 && Main.cups < 1) {
+                        canMakeTheCoffee = false;
+                    }else{
+                    Main.water -= 350;
+                    Main.milk -= 75;
+                    Main.coffeeBeans -= 20;
                     Main.cups -= 1;
-                    Main.money += 4;
+                    Main.money += 7;
                     canMakeTheCoffee = true;
+                    }
                 }
-            }
-
-            case 2 -> {
-                if(Main.water < 350 && Main.milk < 75 && Main.coffeeBeans < 20 && Main.cups < 1) {
-                    canMakeTheCoffee = false;
-                }else{
-                Main.water -= 350;
-                Main.milk -= 75;
-                Main.coffeeBeans -= 20;
-                Main.cups -= 1;
-                Main.money += 7;
-                canMakeTheCoffee = true;
+                case 3 -> {
+                    if(Main.water < 200 && Main.milk < 100 && Main.coffeeBeans < 12 && Main.cups < 1) {
+                        canMakeTheCoffee = false;
+                    }else {
+                        Main.water -= 200;
+                        Main.milk -= 100;
+                        Main.coffeeBeans -= 12;
+                        Main.cups -= 1;
+                        Main.money += 6;
+                        canMakeTheCoffee = true;
+                    }
                 }
-            }
-            case 3 -> {
-                if(Main.water < 200 && Main.milk < 100 && Main.coffeeBeans < 12 && Main.cups < 1) {
-                    canMakeTheCoffee = false;
-                }else {
-                    Main.water -= 200;
-                    Main.milk -= 100;
-                    Main.coffeeBeans -= 12;
-                    Main.cups -= 1;
-                    Main.money += 6;
-                    canMakeTheCoffee = true;
-                }
-            }
             default -> throw new IllegalStateException("Unexpected value: " + coffeeType);
         }
         return canMakeTheCoffee;
@@ -88,69 +87,16 @@ public class CoffeeMachine {
         // will be done in the next stages
     }
 
-    //Stage 4
-    /*
-    static void limCoffee(int water, int milk, int coffeeBeans, int cups, int money) {
-        String s;
+    static void remaining() {
+        // will be done in the next stages
+    }
 
-        switch (s) {
-            case "buy": {
-                System.out.println("buy");
-            }
-            break;
-            case "fill": {
-                System.out.println("fill");
-            }
-            break;
-            case "take": {
-                System.out.println("take");
-            }
-        }
-
-        String s1;
-        s1 = scanner.nextLine();
-        switch (s1) {
-            case "1": {
-                System.out.println("1");
-            }
-            break;
-            case "2": {
-                System.out.println("2");
-            }
-            break;
-            case "3": {
-                System.out.println("3");
-            }
-        }
-
-        int buy = scanner.nextInt();
-        switch (buy) {
-            case 1: // espresso
-                water -= 250;
-                coffeeBeans -= 16;
-                cups -= 1;
-                money += 4;
-                break;
-            case 2: // latte
-                water -= 350;
-                milk -= 75;
-                coffeeBeans -= 20;
-                cups -= 1;
-                money += 7;
-                break;
-            case 3: // cappuccino
-                water -= 200;
-                milk -= 100;
-                coffeeBeans -= 12;
-                cups -= 1;
-                money += 6;
-                break;
-        }
-        int fill = scanner.nextInt();
-
-    } */
-
+    static void exit() {
+        // will be done in the next stages
+    }
 }
+
+
 
 
 
