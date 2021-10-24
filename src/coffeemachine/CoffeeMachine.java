@@ -34,12 +34,15 @@ public class CoffeeMachine {
         }
     }
 
-
+    //Stage 4-6
     static Boolean buy(int coffeeType) {
-        boolean canMakeTheCoffee;
+        boolean canMakeTheCoffee = false;
             switch (coffeeType) {
-                case 1 -> {
-                    if(Main.water < 250 && Main.coffeeBeans < 16 && Main.cups < 1){
+                case 4 -> {
+                    Main.printResources();
+                }
+                case 1 -> { //making espresso
+                    if(Main.water < 250 || Main.coffeeBeans < 16 || Main.cups < 1){
                         canMakeTheCoffee = false;
                     }else{
                         Main.water -= 250;
@@ -50,8 +53,8 @@ public class CoffeeMachine {
                     }
                 }
 
-                case 2 -> {
-                    if(Main.water < 350 && Main.milk < 75 && Main.coffeeBeans < 20 && Main.cups < 1) {
+                case 2 -> { //making latte
+                    if(Main.water < 350 || Main.milk < 75 || Main.coffeeBeans < 20 || Main.cups < 1) {
                         canMakeTheCoffee = false;
                     }else{
                     Main.water -= 350;
@@ -62,8 +65,8 @@ public class CoffeeMachine {
                     canMakeTheCoffee = true;
                     }
                 }
-                case 3 -> {
-                    if(Main.water < 200 && Main.milk < 100 && Main.coffeeBeans < 12 && Main.cups < 1) {
+                case 3 -> { //making cappuccino
+                    if(Main.water < 200 || Main.milk < 100 || Main.coffeeBeans < 12 || Main.cups < 1) {
                         canMakeTheCoffee = false;
                     }else {
                         Main.water -= 200;
@@ -74,7 +77,7 @@ public class CoffeeMachine {
                         canMakeTheCoffee = true;
                     }
                 }
-            default -> throw new IllegalStateException("Unexpected value: " + coffeeType);
+               default -> throw new IllegalStateException("Unexpected value: " + coffeeType);
         }
         return canMakeTheCoffee;
     }
