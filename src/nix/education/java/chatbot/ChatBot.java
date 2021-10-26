@@ -30,14 +30,12 @@ public class ChatBot {
         //4-th stage
         System.out.println("Now I will prove you that i count to any number you want");
         System.out.println("Введите положительное число: ");
-
         int input = scanner.nextInt();
         for (int Num = 0; Num <= input; Num++) {
             System.out.println(Num + " !");
         }
 
         //5th stage
-
         System.out.println("Lets test your programming knowlege");
         System.out.println("Why do we use methods?");
         System.out.println("1.To repeat a statement multiple times");
