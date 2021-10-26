@@ -22,7 +22,7 @@ public class Main
         System.out.println("Coffee is ready!");
 
         printResources(); //choose buy, fill, take,remaining or exit
-        while (true) {
+        do {
             System.out.println("\nWrite action: (buy, fill, take, remaining, exit)");
             String input = scanner.nextLine();
             switch (input) {
@@ -32,7 +32,7 @@ public class Main
                 case ("remaining") -> remaining();
                 case ("exit") -> exit();
             }
-        }
+        } while (true);
     }
 
     static void printResources() { //printing all resources your coffee machine has
