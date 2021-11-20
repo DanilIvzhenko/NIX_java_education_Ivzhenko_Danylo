@@ -1,97 +1,154 @@
 package Tictactoe;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
-
+import java.util.*;
+//row - r, column - c
+class UsedCoordsExc extends Exception {}
+class OutOfBoundsExc extends Exception {}
 public class Tictactoe {
+    static List<List<Integer>> winningTheConditions;
     Scanner scanner = new Scanner(System.in);
-    static ArrayList<Integer> xPositions = new ArrayList<Integer>();
-    static ArrayList<Integer> oPositions = new ArrayList<Integer>();
-    static boolean isXWinner = false;
-    static boolean isOWinner = false;
-
-    public void getWinnerConditions() {
-        List topRow = Arrays.asList(0, 1, 2);
-        List middleRow = Arrays.asList(3, 4, 5);
-        List bottomRow = Arrays.asList(6, 7, 8);
-        List leftCol = Arrays.asList(0, 3, 6);
-        List middleCol = Arrays.asList(1, 4, 7);
-        List rightCol = Arrays.asList(2, 5, 8);
-        List cross1 = Arrays.asList(0, 4, 8);
-        List cross2 = Arrays.asList(6, 4, 2);
-        List<List> winningConditions = new ArrayList<>();
-        winningConditions.add(topRow);
-        winningConditions.add(middleRow);
-        winningConditions.add(bottomRow);
-        winningConditions.add(leftCol);
-        winningConditions.add(rightCol);
-        winningConditions.add(middleCol);
-        winningConditions.add(cross1);
-        winningConditions.add(cross2);
-        for (List l : winningConditions) {
-            if (xPositions.containsAll(l)) {
-                isXWinner = true;
-            }
-            if (oPositions.containsAll(l)) {
-                isOWinner = true;
+    private final ArrayList<Integer> xPositions = new ArrayList<>();
+    private final ArrayList<Integer> oPositions = new ArrayList<>();
+    private boolean xWinner = false;
+    private boolean oWinner = false;
+    private String currentPlayer = "X";
+    static {
+        List<Integer> topR = Arrays.asList(0, 1, 2);
+        List<Integer> middleR = Arrays.asList(3, 4, 5);
+        List<Integer> bottomR = Arrays.asList(6, 7, 8);
+        List<Integer> leftC = Arrays.asList(0, 3, 6);
+        List<Integer> middleC = Arrays.asList(1, 4, 7);
+        List<Integer> rightC = Arrays.asList(2, 5, 8);
+        List<Integer> cross1 = Arrays.asList(0, 4, 8);
+        List<Integer> cross2 = Arrays.asList(6, 4, 2);
+        winningTheConditions = new ArrayList<>();
+        winningTheConditions.add(topR);
+        winningTheConditions.add(middleR);
+        winningTheConditions.add(bottomR);
+        winningTheConditions.add(leftC);
+        winningTheConditions.add(rightC);
+        winningTheConditions.add(middleC);
+        winningTheConditions.add(cross1);
+        winningTheConditions.add(cross2);
+    }
+    private boolean isOWinner() {
+        return oWinner && !xWinner;
+    }
+    private boolean isxWinner() {
+        return xWinner && !oWinner;
+    }
+    private boolean isDraw() {
+        return !xWinner && !oWinner;
+    }
+    private boolean isImpossible() {
+        return (oWinner && xWinner || xPositions.size() - oPositions.size() > 1 || oPositions.size() - xPositions.size()
+                > 1);
+    }
+    private boolean isGameNotFinished() {
+        return (!oWinner && !xWinner && xPositions.size() + oPositions.size() < 9);
+    }
+    void finishedField(){
+        System.out.println("---------");
+        System.out.println("| X O X |");
+        System.out.println("| O X X |");
+        System.out.println("| O O X |");
+        System.out.println("---------");
+        System.out.println("X - wins");
+    }
+    void mainSolve(String[][] fieldOfTicTacToe){
+        readCells(fieldOfTicTacToe);
+        showGameStatusField(fieldOfTicTacToe);
+        while (checkTheWinnerInTheGame().equals("Game not finished")) {
+            makeUserMoveTo(fieldOfTicTacToe);
+            showGameStatusField(fieldOfTicTacToe);
+            checkTheWinnerInTheGame();
+            switchThePlayer();
+        }
+        System.out.println(checkTheWinnerInTheGame());
+    }
+    public void switchThePlayer() {
+        if (currentPlayer.equals("X")) {
+            currentPlayer = "O";
+        } else if (currentPlayer.equals("O")) {
+            currentPlayer = ("X");
+        }
+    }
+    private void getTheConditionOfTheWinner() {
+        for (List<Integer> list : winningTheConditions) {
+            if (xPositions.containsAll(list)) {
+                xWinner = true;
+            } if (oPositions.containsAll(list)) {
+                oWinner = true;
             }
         }
     }
-
-    public void printingFinishedField() {
-        System.out.println("""
-                X O X
-                O X O
-                O O X""");
-    }
-
-    public String[][] readCells(String[][] ticTacToeField) {
-        System.out.print("Enter Cells: ");
-        String cells = scanner.next();
-        String[] cell = cells.split("");
+    public void readCells(String[][] fieldOfTicTacToe) {
         for (int c = 0; c < 3; c++) {
             for (int r = 0; r < 3; r++) {
-                ticTacToeField[c][r] = cell[3 * c + r];
-                if (cell[3 * c + r].equals("X")) {
-                    xPositions.add(3 * c + r);
-                } else if (cell[3 * c + r].equals("O")) {
-                    oPositions.add(3 * c + r);
-                }
+                fieldOfTicTacToe[c][r] = " ";
             }
         }
-        return ticTacToeField;
     }
-    //column - c , row - r
-    public void showGameStatus(String[][] tictactoeField) {
-        readCells(tictactoeField);
+    private void doUserMoveTo(String[][] fieldOfTicTacToe, String moveXorO) throws UsedCoordsExc, OutOfBoundsExc {
+        System.out.print("Enter the coordinates: ");
+        int c = scanner.nextInt() - 1;
+        int r = scanner.nextInt() - 1;
+        if (c > 2 || c < 0 || r > 2 || r < 0) {
+            throw new OutOfBoundsExc();
+        }
+        if (fieldOfTicTacToe[c][r].equals("X") || fieldOfTicTacToe[c][r].equals("O")) {
+            throw new UsedCoordsExc();
+        }
+        fieldOfTicTacToe[c][r] = moveXorO;
+        if (moveXorO.equals("X")) {
+            xPositions.add(3 * c + r);
+        } else if (moveXorO.equals("O")) {
+            oPositions.add(3 * c + r);
+        }
+    }
+    public void makeUserMoveTo(String[][] fieldOfTicTacToe) {
+        try {
+            doUserMoveTo(fieldOfTicTacToe, currentPlayer);
+        } catch (OutOfBoundsExc exc) {
+            System.out.println("Coordinates should be from 1 to 3!");
+            makeUserMoveTo(fieldOfTicTacToe);
+        } catch (UsedCoordsExc exc) {
+            System.out.println("This cell is occupied! Choose another one");
+            makeUserMoveTo(fieldOfTicTacToe);
+        } catch (InputMismatchException exc) {
+            System.out.println("You should enter numbers!");
+            scanner.reset();
+            scanner.next();
+            makeUserMoveTo(fieldOfTicTacToe);
+        }
+    }
+    public void showGameStatusField(String[][] fieldOfTicTacToe) {
         System.out.println("---------");
         for (int c = 0; c < 3; c++) {
             System.out.print("| ");
             for (int r = 0; r < 3; r++) {
-                System.out.printf("%s ", tictactoeField[c][r]);
+                System.out.printf("%s ", fieldOfTicTacToe[c][r]);
             }
             System.out.println("|");
         }
         System.out.println("---------");
     }
-
-    public String checkWinner() {
-        getWinnerConditions();
-        if (isOWinner && isXWinner || xPositions.size() - oPositions.size() > 1 || oPositions.size() - xPositions.size()
-                > 1) {
-            return "Impossible";
-        } else if (!isOWinner && !isXWinner && xPositions.size() + oPositions.size() < 9) {
-            return "Game not finished";
-        } else if (isOWinner && !isXWinner) {
-            return "O won";
-        } else if (isXWinner && !isOWinner) {
-            return "X won";
-        } else if (!isXWinner && !isOWinner) {
-            return "Draw";
+    public String checkTheWinnerInTheGame() {
+        getTheConditionOfTheWinner();
+        String winnerStatusIs = "NULL";
+        if (isImpossible()) {
+            winnerStatusIs = "Impossible";
+        } else if (isGameNotFinished()) {
+            winnerStatusIs = "Game not finished";
+        } else if (isOWinner()) {
+            winnerStatusIs = "O wins";
+        } else if (isxWinner()) {
+            winnerStatusIs = "X wins";
+        } else if (isDraw()) {
+            winnerStatusIs = "Draw";
         }
-        return "";
+        return winnerStatusIs;
     }
 }
+
 
 
